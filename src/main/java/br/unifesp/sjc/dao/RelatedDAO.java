@@ -24,42 +24,41 @@ public class RelatedDAO {
 
 		List<String> synList = new LinkedList<String>();
 		List<String> antonymList = new LinkedList<String>();
-		
+
 		Query query = session.createQuery(GET_RELATED_BY_WORD);
 		query.setParameter("word", word);
 		List<Object[]> resultList = query.list();
-		
-		for(Object[] lo : resultList) {
-		  if(((String)lo[2]).equals("s")) {
-		    String syn = "";
-		    if(((String)lo[1]).equals(word))
-		      syn = (String)lo[0];
-		    else
-		      syn = (String)lo[1];
-		    synList.add(syn);
-		    addAntonyms(syn, antonymList, session);
-		  } else if(((String)lo[2]).equals("a")) {
-		    String ant = "";
-        if(((String)lo[1]).equals(word)) 
-          ant = (String)lo[0];
-        else 
-          ant = (String)lo[1];
-        if(!word.contains(ant))
-          antonymList.add(ant);
-        addSynonyms(ant, antonymList, session);
-		  }
+
+		for (Object[] lo : resultList) {
+			if (((String) lo[2]).equals("s")) {
+				String syn = "";
+				if (((String) lo[1]).equals(word))
+					syn = (String) lo[0];
+				else
+					syn = (String) lo[1];
+				synList.add(syn);
+				addAntonyms(syn, antonymList, session);
+			} else if (((String) lo[2]).equals("a")) {
+				String ant = "";
+				if (((String) lo[1]).equals(word))
+					ant = (String) lo[0];
+				else
+					ant = (String) lo[1];
+				if (!word.contains(ant))
+					antonymList.add(ant);
+				addSynonyms(ant, antonymList, session);
+			}
 		}
-		
-    session.close();
-    
-    List<List<String>> results = new LinkedList<List<String>>();
-    
-    results.add(synList);
-    results.add(antonymList);
-    
+
+		session.close();
+
+		List<List<String>> results = new LinkedList<List<String>>();
+
+		results.add(synList);
+		results.add(antonymList);
+
 		return results;
 	}
-
 
   private static void addSynonyms(String word, List<String> list, Session s) {
     Query query = s.createQuery(GET_SYNONYMS_BY_WORD);  
